@@ -1,0 +1,173 @@
+Season_winner = 
+
+var selectedseason = SELECTEDVALUE(ipl_matches_data[season])
+
+var finalmatchdate = CALCULATE(max(ipl_matches_data[match_date]),ipl_matches_data[season] = selectedseason)
+
+var final_match_winner = CALCULATE(max(ipl_matches_data[match_winner]),ipl_matches_data[season] = selectedseason,ipl_matches_data[match_date] = finalmatchdate)
+
+RETURN final_match_winner
+
+
+
+total_6 = CALCULATE(COUNTROWS(ball_by_ball_data),ball_by_ball_data[batter_runs] = 6,
+                                KEEPFILTERS(VALUES(ipl_winners_runners_2008_2025[Year])))
+
+
+ 
+
+
+Centuries =
+VAR SlectedSeason = SELECTEDVALUE (ip1_matches_data[season])
+
+VAR SeasonData = FILTER (ball_by_ball_data,
+                     RELATED (ip1_matches_data[season])= SlectedSeason)
+
+VAR BattetRuns = SUMMARIZE (SeasonData, ball_by_ball_data[match_id],
+                  ball_by_ball_data[batter], "TotalRuns", SUM(ball_by_ball_data[batter_runs]))
+
+VAR CenturyCount = FILTER(BattetRuns, [TotalRuns] >=100)
+RETURN COUNTROWS (CenturyCount)
+
+
+ 
+
+
+
+Orange Cap Holder =
+
+VAR SelectedSeason = SELECTEDVALUE (ip1_matches_data[season])
+
+VAR SeasonDataOnly= FILTER(ball_by_ball_data, RELATED (ipl_matches_data[season]) = SelectedSeason)
+
+VAR RunSummary = SUMMARIZE (SeasonDataOnly, ball_by_ball_data[batter], "Total Runs", SUM(ball_by_ball_data[batter_runs]))
+
+VAR MaxRuns = MAXX (RunSummary, [Total Runs])
+VAR TopScorer = CALCULATETABLE (VALUES (ball_by_ball_data[batter]), FILTER (RunSummary, [Total Runs] =MaxRuns))
+
+RETURN MAXX (Topscorer, ball_by_ball_data[batter])
+
+
+
+
+
+
+
+
+PurpleCapHolder =
+VAR SelectedSeason=SELECTEDVALUE (ipl_matches_data[season])
+-- Filter: wickets in selected season, exclude non-bowler dismissals VAR SeasonWickets=
+FILTER(
+)
+ball_by_ball_data,
+RELATED(ip1_matches_data[season]) = SelectedSeason && ball_by_ball_data[is_wicket] = TRUE() &&
+NOT ball_by_ball_data[wicket_kind] IN { "run out", "retired hurt", "obstructing the field", "retired out"}
+-- Summarize bowler and count wickets
+VAR WicketSummary=
+SUMMARIZE
+SeasonWickets,
+ball_by_ball_data[bowler],
+"WicketCount", COUNTROWS
+FILTER (SeasonWickets, ball_by_ball_data[bowler] = EARLIER (ball_by_ball_data[bowler]))
+Find highest wicket count
+VAR MaxWickets = MAXX (Wicket Summary, [WicketCount])
+-- Get the bowler(s) with that wicket count
+VAR TopBowler =
+CALCULATETABLE(
+VALUES (ball_by_ball_data[bowler]),
+FILTER (WicketSummary, [WicketCount] = MaxWickets)
+
+
+Match_played = 
+
+var selectedseason = SELECTEDVALUE(ipl_matches_data[season])
+
+var Team1Matches = CALCULATE(COUNTROWS(ipl_matches_data),
+                  USERELATIONSHIP(ipl_matches_data[team1],teams_data[team_name]),
+                 ipl_matches_data[season]  = selectedseason,
+                 ipl_matches_data[match_type] = "T20")
+
+
+var Team2Matches = CALCULATE(COUNTROWS(ipl_matches_data),
+                  USERELATIONSHIP(ipl_matches_data[team2],teams_data[team_name]),
+                 ipl_matches_data[season]  = selectedseason,
+                 ipl_matches_data[match_type] = "T20")        
+RETURN Team1Matches + Team2Matches                          
+
+
+Match_points = 
+
+var won =  [match_won]
+var NR = [No_Result]
+RETURN (won*2) + NR
+
+
+
+
+Match_Tied = 
+
+var selectedseason = SELECTEDVALUE(ipl_matches_data[season])
+
+var Team1Matches = CALCULATE(COUNTROWS(ipl_matches_data),
+                  USERELATIONSHIP(ipl_matches_data[team1],teams_data[team_name]),
+                 ipl_matches_data[season]  = selectedseason,
+                 ipl_matches_data[match_type] = "T20",
+                 ipl_matches_data[result] = "tie")
+
+
+var Team2Matches = CALCULATE(COUNTROWS(ipl_matches_data),
+                  USERELATIONSHIP(ipl_matches_data[team2],teams_data[team_name]),
+                 ipl_matches_data[season]  = selectedseason,
+                 ipl_matches_data[match_type] = "T20",
+                  ipl_matches_data[result] = "tie")       
+RETURN Team1Matches + Team2Matches 
+
+
+
+
+No_Result = 
+
+var selectedseason = SELECTEDVALUE(ipl_matches_data[season])
+
+var Team1Matches = CALCULATE(COUNTROWS(ipl_matches_data),
+                  USERELATIONSHIP(ipl_matches_data[team1],teams_data[team_name]),
+                 ipl_matches_data[season]  = selectedseason,
+                 ipl_matches_data[match_type] = "T20",
+                 ipl_matches_data[result] = "no result")
+
+
+var Team2Matches = CALCULATE(COUNTROWS(ipl_matches_data),
+                  USERELATIONSHIP(ipl_matches_data[team2],teams_data[team_name]),
+                 ipl_matches_data[season]  = selectedseason,
+                 ipl_matches_data[match_type] = "T20",
+                  ipl_matches_data[result] = "no result")       
+RETURN Team1Matches + Team2Matches                          
+
+
+
+
+Season_winner = 
+
+var selectedseason = SELECTEDVALUE(ipl_matches_data[season])
+
+var finalmatchdate = CALCULATE(max(ipl_matches_data[match_date]),ipl_matches_data[season] = selectedseason)
+
+var final_match_winner = CALCULATE(max(ipl_matches_data[match_winner]),ipl_matches_data[season] = selectedseason,ipl_matches_data[match_date] = finalmatchdate)
+
+RETURN final_match_winner
+
+
+
+
+toal_4 = CALCULATE(COUNTROWS(ball_by_ball_data),ball_by_ball_data[batter_runs] = 4,
+                                KEEPFILTERS(VALUES(ipl_winners_runners_2008_2025[Year])))
+
+
+total_6 = CALCULATE(COUNTROWS(ball_by_ball_data),ball_by_ball_data[batter_runs] = 6,
+                                KEEPFILTERS(VALUES(ipl_winners_runners_2008_2025[Year])))
+
+
+Total_matches = CALCULATE(DISTINCTCOUNT(ipl_matches_data[match_id]))
+
+                         
+
